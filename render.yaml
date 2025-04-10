@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: meu_sistema_web
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"

@@ -1,0 +1,17 @@
+{
+    "95064532253": {
+        "nome": "teste",
+        "matricula": "6",
+        "status": "Ativo"
+    },
+    "98846536652": {
+        "nome": "jurandir",
+        "matricula": "2",
+        "status": "Ativo"
+    },
+    "123456": {
+        "nome": "teste",
+        "matricula": "3",
+        "status": "Ativo"
+    }
+}

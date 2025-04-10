@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Editar Aluno</h1>
+<form action="/editar" method="POST" class="shadow p-4 bg-light rounded">
+    <div class="mb-3">
+        <label for="cpf" class="form-label">CPF do Aluno:</label>
+        <input type="text" class="form-control" name="cpf" id="cpf" placeholder="Ex: 12345678900" required>
+    </div>
+    <div class="mb-3">
+        <label for="nome" class="form-label">Novo Nome:</label>
+        <input type="text" class="form-control" name="nome" id="nome">
+    </div>
+    <div class="mb-3">
+        <label for="matricula" class="form-label">Nova Matrícula:</label>
+        <input type="text" class="form-control" name="matricula" id="matricula">
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Novo Status:</label>
+        <select class="form-select" name="status">
+            <option value="">Manter Status Atual</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Editar</button>
+</form>
+
+{% if mensagem %}
+<div class="mt-4 p-4 shadow bg-success text-white rounded">
+    <h3>{{ mensagem }}</h3>
+</div>
+{% elif erro %}
+<div class="mt-4 p-4 shadow bg-danger text-white rounded">
+    <h3>{{ erro }}</h3>
+</div>
+{% endif %}
+{% endblock %}

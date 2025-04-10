@@ -1,0 +1,10 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+}
+
+form input, form select, form button {
+    margin: 5px;
+    padding: 8px;
+}

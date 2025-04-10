@@ -1,0 +1,67 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="pt">
+    <div class="container mt-4">
+        <h2>Importar Planilha</h2>
+        <form action="/importar" method="POST" enctype="multipart/form-data" class="shadow p-4 bg-light rounded">
+            <div class="mb-3">
+                <label for="arquivo" class="form-label">Escolha um arquivo Excel:</label>
+                <input type="file" name="arquivo" id="arquivo" class="form-control" accept=".xlsx" required>
+            </div>
+            <button type="submit" class="btn btn-success">Importar Dados</button>
+        </form>
+    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Alunos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>📚 Cadastro de Alunos</h1>
+
+    <h2>Cadastrar Novo Aluno</h2>
+    <form action="/cadastrar" method="POST">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="text" name="cpf" placeholder="CPF" required>
+        <input type="text" name="matricula" placeholder="Matrícula" required>
+        <select name="status">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Pesquisar Aluno</h2>
+    <form action="/consultar" method="GET">
+        <input type="text" name="cpf" placeholder="Digite o CPF" required>
+        <button type="submit">Pesquisar</button>
+    </form>
+
+    <h2>Editar Aluno</h2>
+    <form action="/editar/{{ cpf }}" method="POST">
+        <input type="text" name="nome" placeholder="Novo Nome">
+        <input type="text" name="matricula" placeholder="Nova Matrícula">
+        <select name="status">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+        <button type="submit">Editar</button>
+    </form>
+
+    <h2>Relatório de Alunos</h2>
+    <a href="/relatorio">Ver Relatório</a>
+
+    <h2>Alunos Cadastrados</h2>
+    {% for cpf, aluno in alunos.items() %}
+        <p>📌 {{ aluno.nome }} | Matrícula: {{ aluno.matricula }} | Status: {{ aluno.status }} | CPF: {{ cpf }}</p>
+        <form action="/alterar_status/{{ cpf }}" method="POST" style="display:inline;">
+            <select name="status">
+                <option value="Ativo">Ativo</option>
+                <option value="Inativo">Inativo</option>
+            </select>
+            <button type="submit">Alterar Status</button>
+        </form>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Cadastrar Aluno</h1>
+
+    {% if erro %}
+    <div class="alert alert-danger" role="alert">
+        {{ erro }}
+    </div>
+    {% elif mensagem %}
+    <div class="alert alert-success" role="alert">
+        {{ mensagem }}
+    </div>
+    {% endif %}
+
+    <form action="/cadastro" method="POST" class="shadow p-4 bg-light rounded">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" class="form-control" name="nome" id="nome" placeholder="Digite o nome do aluno" required>
+        </div>
+        <div class="mb-3">
+            <label for="cpf" class="form-label">CPF:</label>
+            <input type="text" class="form-control" name="cpf" id="cpf" placeholder="Digite o CPF" required>
+        </div>
+        <div class="mb-3">
+            <label for="matricula" class="form-label">Matrícula:</label>
+            <input type="text" class="form-control" name="matricula" id="matricula" placeholder="Digite a matrícula" required>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <select name="status" id="status" class="form-select">
+                <option value="Ativo">Ativo</option>
+                <option value="Inativo">Inativo</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+</div>
+{% endblock %}

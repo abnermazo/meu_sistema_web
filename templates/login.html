@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Login</h1>
+
+    {% if erro %}
+    <div class="alert alert-danger" role="alert">
+        {{ erro }}
+    </div>
+    {% endif %}
+
+    <form action="/login" method="POST" class="shadow p-4 bg-light rounded">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário:</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Digite seu usuário" required>
+        </div>
+        <div class="mb-3">
+            <label for="senha" class="form-label">Senha:</label>
+            <input type="password" class="form-control" name="senha" id="senha" placeholder="Digite sua senha" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</div>
+{% endblock %}

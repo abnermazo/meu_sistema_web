@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-danger" role="alert">
+        <h1 class="text-center">Erro de Permissão</h1>
+        <p class="text-center">{{ mensagem }}</p>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">Voltar à Página Inicial</a>
+    </div>
+</div>
+{% endblock %}

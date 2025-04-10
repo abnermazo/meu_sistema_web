@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Relatórios de Alunos</h1>
+
+    <h2 class="mt-4">Alunos Ativos</h2>
+    <table class="table table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Matrícula</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cpf, aluno in ativos.items() %}
+            <tr>
+                <td>{{ aluno.nome }}</td>
+                <td>{{ cpf }}</td>
+                <td>{{ aluno.matricula }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-4">Alunos Inativos</h2>
+    <table class="table table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Matrícula</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cpf, aluno in inativos.items() %}
+            <tr>
+                <td>{{ aluno.nome }}</td>
+                <td>{{ cpf }}</td>
+                <td>{{ aluno.matricula }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
