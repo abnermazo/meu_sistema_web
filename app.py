@@ -207,5 +207,21 @@ def validar_cpf(cpf):
     # Verifica os dígitos verificadores
     return primeiro_dv == int(cpf[9]) and segundo_dv == int(cpf[10])
 
+# Rota para apagar alunos (admin)
+@app.route("/apagar", methods=["POST"])
+def apagar():
+    if "usuario" not in session or session.get("permissao") != "admin":
+        return render_template("erro.html", mensagem="Acesso negado! Apenas administradores podem apagar alunos.", title="Erro de Permissão")
+
+    cpf = request.form["cpf"]
+    alunos = carregar_dados()
+    if cpf in alunos:
+        del alunos[cpf]  # Remove o aluno pelo CPF
+        salvar_dados(alunos)
+        return redirect(url_for("alunos"))  # Redireciona para a página de alunos
+    else:
+        return render_template("erro.html", mensagem="Aluno não encontrado!", title="Erro de Permissão")
+    
+
 if __name__ == "__main__":
     app.run(debug=True)

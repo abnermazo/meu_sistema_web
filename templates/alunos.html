@@ -1,24 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Alunos Cadastrados</h1>
-<table class="table table-striped shadow">
-    <thead class="table-dark">
-        <tr>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th>Matrícula</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cpf, aluno in alunos.items() %}
-        <tr>
-            <td>{{ aluno.nome }}</td>
-            <td>{{ cpf }}</td>
-            <td>{{ aluno.matricula }}</td>
-            <td>{{ aluno.status }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-4">
+    <h1 class="text-center">Alunos Cadastrados</h1>
+    <table class="table table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Matrícula</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cpf, aluno in alunos.items() %}
+            <tr>
+                <td>{{ aluno.nome }}</td>
+                <td>{{ cpf }}</td>
+                <td>{{ aluno.matricula }}</td>
+                <td>{{ aluno.status }}</td>
+                <td>
+                    <form action="/apagar" method="POST" style="display:inline;">
+                        <input type="hidden" name="cpf" value="{{ cpf }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Apagar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
