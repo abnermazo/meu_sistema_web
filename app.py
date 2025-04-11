@@ -1,13 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask import jsonify
+from flask import session
+
 import json
 import os
+import pandas as pd # Para manipulação de planilhas Excel
 
 app = Flask(__name__)
 app.secret_key = "chave_secreta_segura"  # Chave para gerenciar sessões
 
 FILE_NAME = "alunos.json"
 USERS_FILE = "usuarios.json"
+
+def carregar_dados():
+    if os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def salvar_dados(dados):
+    with open(FILE_NAME, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=4)
 
 def carregar_usuarios():
     if os.path.exists(USERS_FILE):
@@ -63,24 +76,25 @@ def cadastro_usuario():
 
 # Rota para usuarios visualizar os alunos cadastrados (admin)
 @app.route("/relatorios")
-def relatorios_usuario():
-    if "usuario" not in session:
-        return redirect(url_for("login"))  # Redireciona para o login
+def relatorios():
+    alunos = carregar_dados()  # Carrega os dados do JSON atualizado
 
-    alunos = carregar_dados()
-    ativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"] == "Ativo"}
-    inativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"] == "Inativo"}
-    return render_template("relatorios.html", ativos=ativos, inativos=inativos, title="Relatórios")
+    # Filtra alunos ativos e inativos, normalizando a capitalização do status
+    ativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"].lower() == "ativo"}
+    inativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"].lower() == "inativo"}
 
-def carregar_dados():
-    if os.path.exists(FILE_NAME):
-        with open(FILE_NAME, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+    # Debug: Verificar se a filtragem está funcionando corretamente
+    print("Ativos enviados ao template:", ativos)
+    print("Inativos enviados ao template:", inativos)
 
-def salvar_dados(dados):
-    with open(FILE_NAME, "w", encoding="utf-8") as f:
-        json.dump(dados, f, indent=4)
+    return render_template(
+        "relatorios.html",
+        ativos=ativos,
+        inativos=inativos,
+        title="Relatório de Alunos"
+    )
+
+
 
 @app.route("/")
 def home():
@@ -152,12 +166,6 @@ def pesquisar():
             return render_template("pesquisar.html", erro="Aluno não encontrado!", title="Pesquisar Aluno")
     return render_template("pesquisar.html", title="Pesquisar Aluno")
 
-@app.route("/relatorios")
-def relatorios():
-    alunos = carregar_dados()
-    ativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"] == "Ativo"}
-    inativos = {cpf: aluno for cpf, aluno in alunos.items() if aluno["status"] == "Inativo"}
-    return render_template("relatorios.html", title="Relatórios", ativos=ativos, inativos=inativos)
 
 @app.route("/editar", methods=["GET", "POST"])
 def editar():
@@ -221,7 +229,52 @@ def apagar():
         return redirect(url_for("alunos"))  # Redireciona para a página de alunos
     else:
         return render_template("erro.html", mensagem="Aluno não encontrado!", title="Erro de Permissão")
-    
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload():
+    if "usuario" not in session or session.get("permissao") != "admin":
+        return render_template("erro.html", mensagem="Acesso negado! Apenas administradores podem importar planilhas.", title="Erro de Permissão")
+
+    if request.method == "POST":
+        if "file" not in request.files:
+            return "Nenhum arquivo enviado!"
+        
+        arquivo = request.files["file"]
+
+        if arquivo.filename == "":
+            return "Nenhum arquivo selecionado!"
+        
+        try:
+            # Lê o arquivo Excel
+            df = pd.read_excel(arquivo, engine="openpyxl")
+            
+            # Carrega os dados existentes
+            try:
+                with open("alunos.json", "r") as f:
+                    alunos = json.load(f)
+            except FileNotFoundError:
+                alunos = {}
+
+            # Adiciona os dados da planilha ao banco de dados
+            for _, linha in df.iterrows():
+                cpf = str(linha["CPF"])  # Certifique-se que os campos da planilha correspondem
+                alunos[cpf] = {
+                    "nome": linha["Nome"],
+                    "matricula": linha["Matricula"],
+                    "status": linha["Status"]
+                }
+
+            # Salva os dados atualizados
+            salvar_dados(alunos)
+
+            # Debug: Exibir no terminal para garantir que os dados foram salvos
+            print("Dados importados e salvos:", alunos)
+
+            return "Planilha importada com sucesso! Verifique o relatório."
+        except Exception as e:
+            return f"Erro ao processar o arquivo: {e}"
+
+    return render_template("upload.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

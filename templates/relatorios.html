@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Relatórios de Alunos</h1>
-
+    <h1 class="text-center">Relatório de Alunos</h1>
+    
     <h2 class="mt-4">Alunos Ativos</h2>
     <table class="table table-striped shadow">
         <thead class="table-dark">
@@ -43,4 +43,14 @@
         </tbody>
     </table>
 </div>
+{% if mensagem %}
+<div class="mt-4 p-4 shadow bg-success text-white rounded">
+    <h3>{{ mensagem }}</h3>
+</div>
+{% elif erro %}
+<div class="mt-4 p-4 shadow bg-danger text-white rounded">
+    <h3>{{ erro }}</h3>
+</div>
+{% endif %}
+
 {% endblock %}
